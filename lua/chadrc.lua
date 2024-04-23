@@ -4,6 +4,7 @@
 ---@type ChadrcConfig
 local M = {}
 
+-- Set the ui theme 
 M.ui = {
 	theme = "tokyodark",
 
