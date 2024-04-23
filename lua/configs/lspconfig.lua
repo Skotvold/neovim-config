@@ -13,7 +13,6 @@ local servers = {
 
 local util = require "lspconfig/util"
 
--- lsps with default config
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,
@@ -21,36 +20,6 @@ for _, lsp in ipairs(servers) do
     capabilities = capabilities,
     hint = true
   }
-end
-
--- Define a global flag to track state
-_G.diagnostics_in_insert_mode = false
-
--- Function to toggle diagnostics in insert mode
-function _G.toggle_diagnostics_in_insert_mode()
-    _G.diagnostics_in_insert_mode = not _G.diagnostics_in_insert_mode
-
-    if _G.diagnostics_in_insert_mode then
-        vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-            vim.lsp.diagnostic.on_publish_diagnostics, {
-                virtual_text = true,
-                signs = true,
-                update_in_insert = true,  -- Enable diagnostics in insert mode
-                underline = true,
-            }
-        )
-        print("Diagnostics in insert mode: ON")
-    else
-        vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-            vim.lsp.diagnostic.on_publish_diagnostics, {
-                virtual_text = true,
-                signs = true,
-                update_in_insert = false,  -- Disable diagnostics in insert mode
-                underline = true,
-            }
-        )
-        print("Diagnostics in insert mode: OFF")
-    end
 end
 
 local on_attach_go = function(client, bufnr)
@@ -76,15 +45,6 @@ local on_attach_go = function(client, bufnr)
   else
     print("Diagnostics in insert mode: OFF for Go")
   end
-
-    -- Enable inlay hints
-  --vim.lsp.inlay_hint.enable(true, {
-   -- options = {
-   --     type_hints = true,
-   --     parameter_hints = true,
-   --     label_hints = true,
-   -- }
-  --})
 end
 
 -- typescript
@@ -123,3 +83,35 @@ lspconfig.gopls.setup {
     }
   }
 }
+
+
+
+-- Define a global flag to track state
+_G.diagnostics_in_insert_mode = true
+
+-- Function to toggle diagnostics in insert mode
+function _G.toggle_diagnostics_in_insert_mode()
+    _G.diagnostics_in_insert_mode = not _G.diagnostics_in_insert_mode
+
+    if _G.diagnostics_in_insert_mode then
+        vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+            vim.lsp.diagnostic.on_publish_diagnostics, {
+                virtual_text = true,
+                signs = true,
+                update_in_insert = true,  -- Enable diagnostics in insert mode
+                underline = true,
+            }
+        )
+        print("Diagnostics in insert mode: ON")
+    else
+        vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+            vim.lsp.diagnostic.on_publish_diagnostics, {
+                virtual_text = true,
+                signs = true,
+                update_in_insert = false,  -- Disable diagnostics in insert mode
+                underline = true,
+            }
+        )
+        print("Diagnostics in insert mode: OFF")
+    end
+end
