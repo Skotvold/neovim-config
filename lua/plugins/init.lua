@@ -68,7 +68,7 @@ return {
         "stylua",
         "golines",
         "goimports",
-        "gofumpts",
+        "gofumpt",
         "goimports_reviser",
 
         -- system langauges
