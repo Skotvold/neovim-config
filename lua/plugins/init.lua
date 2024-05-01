@@ -69,7 +69,6 @@ return {
         "golines",
         "goimports",
         "gofumpt",
-        "goimports_reviser",
 
         -- system langauges
         "gopls",
