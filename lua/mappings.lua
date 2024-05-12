@@ -1,5 +1,4 @@
 require "nvchad.mappings"
-
 local inlay_hints = require "configs/inlay_hints"
 local map =vim.keymap.set
 -- local opts = { noremap = true}
@@ -31,3 +30,30 @@ map('n', '<leader>td', '<cmd>lua toggle_diagnostics_in_insert_mode()<CR>', {
 map('n', '<leader>ti', function () inlay_hints.ToggleInlayHints() end,
   { noremap = true, silent = true, desc =   "Toggle inlay hints"
 })
+
+-- LSP mappings 
+map("n", "<leader>gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { desc = "LSP go to definition" })
+map("n", "<leader>gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { desc = "LSP go to declaration" })
+map("n", "<leader>gr", "<cmd>lua vim.lsp.buf.references()<CR>", { desc = "LSP go to references" })
+map("n", "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { desc = "LSP go to implementation" })
+map("n", "<leader>gh", "<cmd>lua vim.lsp.buf.hover()<CR>", { desc = "LSP hover" })
+map("n", "<leader>gs", "<cmd>lua vim.lsp.buf.signature_help()<CR>", { desc = "LSP signature help" })
+map("n", "<leader>gp", function() Peek_definition() end, { desc = "LSP peek definition", noremap = true, silent = true })
+map("n", "<leader>gR", "<cmd>lua vim.lsp.buf.rename()<CR>", { desc = "LSP rename" })
+
+function Peek_definition()
+    -- Get the current cursor position and request the definition from the LSP
+    local params = vim.lsp.util.make_position_params()
+    vim.lsp.buf_request(0, 'textDocument/definition', params, function(err, result, ctx, config)
+        if err then
+            vim.notify('Error on Peek Definition: ' .. tostring(err), vim.log.levels.ERROR)
+            return
+        end
+        if not result or vim.tbl_isempty(result) then
+            vim.notify("No definition found", vim.log.levels.INFO)
+            return
+        end
+        -- Use Neovim's util to preview the location in a floating window
+        vim.lsp.util.preview_location(result[1], { border = 'single' })
+    end)
+end
