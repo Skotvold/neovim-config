@@ -13,6 +13,11 @@ map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
 
+
+if vim.fn.has("unix") == 1 then
+  map("i", "<Tab>", "<C-v><Tab>", {noremap = true})
+end
+
 -- Github Copilot
 map("n", "<leader>cpe", 'copilot#Enable()', { noremap = true, silent = true, desc = "Enable copilot" })
 map("n", "<leader>cpd", 'copilot#Disable()', { noremap = true, silent = true, desc = "Disable copilot" })
